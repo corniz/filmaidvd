@@ -1,0 +1,70 @@
+﻿@model Autonuoma.Models.Amziaus_apribojimai
+
+@* this will also be used as page title in main layout *@
+@{
+	ViewData["title"] = "Amžiaus apribojimai šalinimas";
+}
+
+@* content header *@
+<div class="main-content-header">
+	<span class="title">@ViewData["title"]</span>
+	<span class="actions">
+		<a 
+			href="@Url.Action("Index")" 
+			class="btn btn-outline-primary btn-sm"
+		>
+			<i class="fa-solid fa-angles-left"></i> Atgal į sarašą
+		</a>
+	</span>
+</div>
+
+@* content itself *@
+<div class="main-content-ced">
+@using( Html.BeginForm(FormMethod.Post, new { @class="entity-d" }) )
+{
+	@Html.AntiForgeryToken()
+
+	<fieldset>
+		<legend class="confirm-msg">Ar tikrai norite šalinti šią markę?</legend>
+
+		<dl>
+			<dt>@Html.DisplayNameFor(m => m.Id)</dt>
+			<dd>@Html.DisplayFor(m => m.Id)</dd>
+
+			<dt>@Html.DisplayNameFor(m => m.Pavadinimas)</dt>
+			<dd>@Html.DisplayFor(m => m.Pavadinimas)</dd>			
+		</dl>
+
+		@if( ViewData["deletionNotPermitted"] != null )
+		{
+			<div class="fail-msg">
+				<i class="fa-solid fa-circle-exclamation"></i> Šios markės pašalinti negalima, nes 
+				ji turi ryšių į priklausomas esybes.
+			</div>
+		}
+		else
+		{
+			<div class="buttons">
+				<button
+					formaction="@Url.Action("DeleteConfirm", new {id = Model.Id})"
+					class="btn btn-danger"
+					style="white-space: nowrap;"
+				><i class="fa-solid fa-trash"></i> Šalinti</button>
+			</div>			
+		}
+	</fieldset>
+}
+</div>
+
+@* content footer *@
+<div class="main-content-footer">
+	<span class="title"></span>
+	<span class="actions">
+		<a 
+			href="@Url.Action("Index")" 
+			class="btn btn-outline-primary btn-sm"
+		>
+			<i class="fa-solid fa-angles-left"></i> Atgal į sarašą
+		</a>
+	</span>
+</div>

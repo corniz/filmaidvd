@@ -1,0 +1,113 @@
+//table in entity list forms
+table.entity-list {
+	@extend .table, .table-striped, .table-hover;
+
+	//set minimum width to nicely fit elements added by datatables plugin
+	min-width: 80ch;
+
+	//center content vertically, this property only works in tables
+	& tbody tr td {
+		vertical-align: middle;
+	}
+
+	//make last column of entity list tables to be always tight and fit contents without wrapping
+	& thead tr th:last-child, tbody tr td:last-child {
+		width: 1px;
+		white-space: nowrap;
+	}
+}
+
+//forms for entity creation and editing
+form.entity-ce {
+	//set minimum width of forms
+	min-width: 80ch;
+
+	//buttons
+	& button {
+		//prevent whitespace wrapping in button labels
+		white-space: nowrap;
+	}
+
+	//fieldsets for grouping controls
+	& fieldset {
+		@extend .border, .rounded, .shadow, .p-2;
+
+		//add vertical space between field sets and whatever follows
+		margin-bottom: 1.5em;
+	}
+
+	//any form control group
+	& div.form-group, td.form-group {
+		//various form fields
+		& select {
+			@extend .form-control;
+		}
+
+		& input:not([type="checkbox"]) {
+			@extend .form-control;
+		}
+
+		& textarea {
+			@extend .form-control;
+		}
+
+		//field validation error displays
+		& span.field-validation-error {
+			@extend .text-danger;
+		}
+	}
+
+	//non-table form control group
+	& div.form-group {
+		//add some vertical space between non-table form control groups and whatever follows
+		margin-bottom: 1em;
+	}
+
+	//table for related records in complex forms
+	& table {
+		@extend .table, .table-striped, .table-hover, .w-100;
+
+		//center content vertically, this property only works in tables
+		& tbody tr td {
+			vertical-align: middle;
+		}
+
+		//last column
+		& tr th:last-child, & tr td:last-child {
+			//make column to be always tight
+			width: 1px;
+
+			//prevent whitespace wrapping 
+			white-space: nowrap;
+		}
+	}
+}
+
+//forms for entity deletion
+form.entity-d {
+	//buttons
+	& button {
+		//prevent whitespace wrapping in button labels
+		white-space: nowrap;
+	}
+
+	//fieldsets for grouping controls
+	& fieldset {
+		@extend .border, .rounded, .shadow, .p-2;
+
+		//confirmation message
+		& legend.confirm-msg {
+			@extend .text-center;
+		}
+
+		//failure message
+		& div.fail-msg {
+			@extend .alert, .alert-warning, .text-center;
+		}
+
+		//button container
+		& div.buttons {
+			@extend .container-fluid, .d-flex, .justify-content-end;
+		}
+	}
+}

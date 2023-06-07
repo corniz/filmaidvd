@@ -1,0 +1,178 @@
+﻿@{
+	/// <summary>
+	/// Helper for marking active links in main menu.
+	/// </summary>
+	/// <param name="ctrl">Controller to look for.</param>
+	/// <param name="act">Action to look for. Pass null if action does not matter.</param>
+	/// <returns>If controller and (optionally) action match given ones returns "active". Returns empty string otherwise.</returns>
+	string MarkActive(string ctrl, string act = null)
+	{
+		//get current controller and action
+		var curCtrl = (string)ViewContext.RouteData.Values["Controller"];
+		var curAct = (string)ViewContext.RouteData.Values["Action"];
+
+		//compare to given ones
+		if( curCtrl == ctrl && (act == null || curAct == act) )
+			return "active";
+		return "";
+	}
+}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	@* ViewData["title"] gets set in view templates *@
+	<title>Autonuoma - @ViewData["title"]</title>
+
+	<!-- this contains core scripts and styles and is built by webpack -->
+	<script src="@Url.Content("~/deps/dist/main.js")"></script>
+
+	<!-- you can use these to add your own scripts and styles quickly -->
+	<script src="@Url.Content("~/deps-manual/index.js")"></script>
+	<link href="@Url.Content("~/deps-manual/style.css")" rel="stylesheet"/>
+	
+	<script>
+	//<![CDATA[
+		//pull in top most jQuery function exposed from module built by webpack; for use in jQuery plug-in initialization code
+		var $ = window.__jQuery;
+	//]]>
+	</script>
+</head>
+<body>
+	<div class="page-container">
+		@* page header, also main menu *@
+		<nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
+			<div class="container-fluid">
+				@* home button *@
+				<a class="navbar-brand" href="@Url.Action("Index", "Home")" class="navbar-brand"><i class="fa-solid fa-compact-disc"></i></a>
+
+				@* this buttons shows drop down menu on narrow screens; it is invisible normally *@
+				<button
+					class="navbar-toggler"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#navbarContent"
+				>
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				@* menu links for forms and reports *@
+				<div class="container-fluid d-flex justify-content-center">
+					<div class="collapse navbar-collapse" id="navbarContent">
+						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+							@* main menu links go here *@
+							<li class="nav-item">
+								<a href="@Url.Action("Index", "Filmu_tipai")" class="@MarkActive("Filmu_tipai") nav-link">Tipai(Enum)</a>
+							</li>
+							<li class="nav-item">
+								<a href="@Url.Action("Index", "Amziaus_apribojimai")" class="@MarkActive("Amziaus_apribojimai") nav-link">Apribojimai(Enum)</a>
+							</li>
+							<li class="nav-item">
+								<a href="@Url.Action("Index", "Filmo_DVD")" class="@MarkActive("Filmo_DVD") nav-link">DVD(F1)</a>
+							</li>
+							<li class="nav-item">
+								<a href="@Url.Action("Index", "UzsakytaPaslaugaF2")" class="@MarkActive("UzsakytaPaslaugaF2") nav-link">Paslauga(F2)</a>
+							</li>
+						</ul>
+
+						@* drop-down menu for report links *@
+						<ul class="navbar-nav justify-content-right mb-2 mb-lg-0">
+							<li class="nav-item dropdown">
+								<a
+									class="@MarkActive("Report") nav-link dropdown-toggle"
+									href="#"
+									id="navbarReports"
+									role="button"
+									data-bs-toggle="dropdown"
+									aria-expanded="false"
+								>
+									Ataskaitos
+								</a>
+								<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarReports">
+									@* report links go here *@
+									<li>
+										<a
+											href="@Url.Action("Services", "Reports")"
+											class="@MarkActive("Reports", "Services") dropdown-item"
+										>Paslaugų ataskaita</a>
+									</li>
+									<li>
+										<a
+											href="@Url.Action("Contracts", "Reports")"
+											class="@MarkActive("Reports", "Contracts") dropdown-item"
+										>Sutarčių ataskaita</a>
+									</li>
+									<li>
+										<a
+											href="@Url.Action("LateContracts", "Reports")"
+											class="@MarkActive("Reports", "LateContracts") dropdown-item"
+										>Vėluojančių sutarčių ataskaita</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</nav>
+
+		@* main content gets rendered here *@
+		<div class="main-content">
+			@RenderBody()
+		</div>
+
+		@* page footer *@
+		<div class="page-footer">
+			<footer>
+				<p>&copy; KTU Kornelijus Juška</p>
+			</footer>
+		</div>
+	</div>
+	
+	@* any JavaScript code comming from script sections in views gets rendered here *@
+	@RenderSection("scripts", required: false)
+
+	@* JavaScript code initialization routines go here *@
+	<script>
+	//<![CDATA[
+		//this function gets invoked by the browser when HTML page is fully loaded
+		$(document).ready(function () {
+			//apply jQuery datatables plugin on tables having CSS class 'entity-list'
+			$(".entity-list").DataTable({
+				"autoWidth": true,
+				language : {
+					"decimal":        "",
+					"emptyTable":     "Įrašų nėra",
+					"info":           "Įrašai nuo _START_ iki _END_ iš _TOTAL_",
+					"infoEmpty":      "0",
+					"infoFiltered":   "(iš _MAX_ įrašų)",
+					"infoPostFix":    "",
+					"thousands":      ",",
+					"lengthMenu":     "Puslapyje: _MENU_",
+					"loadingRecords": "Vyksta duomenų įkėlimas...",
+					"processing":     "Vyksta apdorojimas...",
+					"search":         "Paieška:",
+					"zeroRecords":    "Įrašų nerasta",
+					"paginate": {
+						"first":      "Pirmas",
+						"last":       "Paskutinis",
+						"next":       "Sekantis",
+						"previous":   "Buvęs"
+					},
+					"aria": {
+						"sortAscending":  ": rikiuoti didėjimo tvarka",
+						"sortDescending": ": rikiuoti mažėjimo tvarka"
+					}
+				}
+			});
+
+			//apply jQuery datetimepicker plugin on fields having CSS classes 'date-picker' and 'datetime-picker'
+			$(".date-picker").datetimepicker({ timepicker:false, format: 'Y-m-d' });
+			$(".datetime-picker").datetimepicker({ format: 'Y-m-d h:i' });
+		});
+	//]]>
+	</script>
+</body>
+</html>

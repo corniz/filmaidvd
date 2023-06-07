@@ -1,0 +1,113 @@
+﻿@model Autonuoma.Models.ContractsReport.Report
+
+@* this will also be used as page title in main layout *@
+@{
+	ViewData["title"] = "Sutarčių ataskaita";
+}
+
+@* content header *@
+<div class="main-content-header">
+	<span class="title">@ViewData["title"]</span>
+</div>
+
+@* content itself *@
+<div class="main-content-rep">
+	@using (Html.BeginForm(FormMethod.Get, new { @class = "rep" }))
+	{
+		<p><strong>Parengta:</strong> @String.Format("{0:yyyy-MM-dd HH:mm}", DateTime.Now)</p>
+
+		@* filter section *@
+		<div class="filter">
+			<div class="fields">
+				<div class="field">
+					<label>Sutartys nuo:</label>
+					@Html.TextBoxFor(m => m.DateFrom, "{0:yyyy-MM-dd}", new { @class = "date-picker" })
+				</div>
+
+				<div class="field">
+					<label>Sutartys iki:</label>
+					@Html.TextBoxFor(m => m.DateTo, "{0:yyyy-MM-dd}", new { @class = "date-picker" })
+				</div>
+				<div class="field">
+					<label>Pavardziu tvarka:</label>
+					@Html.DropDownListFor(m => m.selected, new SelectList(Model.SelectedOrderOption), (string)ViewData["none-chosen"])
+				</div>
+			</div>
+
+			<div class="buttons">
+				<button class="btn btn-success"><i class="fa-solid fa-filter"></i> Atrinkti</button>
+			</div>
+		</div>
+
+		@* report data *@
+		<table class="report">
+			<thead>
+				<tr>
+					<th>@Html.DisplayNameFor(m => m.Sutartys[0].Id)</th>
+					<th>@Html.DisplayNameFor(m => m.Sutartys[0].SutartiesData)</th>
+					<th>@Html.DisplayNameFor(m => m.Sutartys[0].Kaina)</th>
+					<th>@Html.DisplayNameFor(m => m.Sutartys[0].PaslauguKaina)</th>
+				</tr>
+			</thead>
+			<tbody>
+				@if (Model.Sutartys.Count == 0)
+				{
+					@* no data message *@
+					<tr class="no-data-msg">
+						<td colspan="4" align="center">Nurodytame laikotarpyje nebuvo sudaryta sutarčių</td>
+					</tr>
+				}
+				else
+				{
+					@* groups *@
+					@for (int i = 0; i < Model.Sutartys.Count; i++)
+					{
+						@* group header *@
+						if (i == 0 || Model.Sutartys[i].AsmensKodas != Model.Sutartys[i - 1].AsmensKodas)
+						{
+							<tr class="group-header">
+								<td colspan="4"
+					align="center" style="background-color: darkred;">
+									<b style="color: white;" >@Html.DisplayFor(m => Model.Sutartys[i].Vardas) @Html.DisplayFor(m => Model.Sutartys[i].Pavarde)</b>
+								</td>
+							</tr>
+						}
+
+						@* group content *@
+						<tr>
+							<td>#@Html.DisplayFor(m => Model.Sutartys[i].Id)</td>
+							<td>@Html.DisplayFor(m => Model.Sutartys[i].SutartiesData)</td>
+							<td>@Html.DisplayFor(m => Model.Sutartys[i].Kaina)</td>
+							<td>@Html.DisplayFor(m => Model.Sutartys[i].PaslauguKaina)</td>
+						</tr>
+
+						@* group total *@
+						if (i == Model.Sutartys.Count - 1 || Model.Sutartys[i].AsmensKodas != Model.Sutartys[i + 1].AsmensKodas)
+						{
+							<tr>
+								<td colspan="2"></td>
+								<td><b>@Html.DisplayFor(m => Model.Sutartys[i].BendraSuma)</b></td>
+								<td><b>@Html.DisplayFor(m => Model.Sutartys[i].BendraSumaPaslaug)</b></td>
+							</tr>
+						}
+					}
+
+					@* grand total *@
+					<tr class="grand-total-header">
+						<td colspan="4" align="center"><b>Viso</b></td>
+					</tr>
+
+					<tr>
+						<td colspan="2"></td>
+						<td>
+							@Html.DisplayFor(m => Model.VisoSumaSutartciu)
+						</td>
+						<td>
+							@Html.DisplayFor(m => Model.VisoSumaPaslaugu)
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+</div>

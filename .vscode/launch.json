@@ -1,0 +1,18 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Autonuoma",
+			"type": "coreclr",
+			"request": "launch",
+			"preLaunchTask": "build",
+			"program": "${workspaceFolder}/Autonuoma/bin/Debug/net6.0/Autonuoma.dll",
+			"args": [],
+			"cwd": "${workspaceFolder}/Autonuoma",
+			"stopAtEntry": false,			
+			"sourceFileMap": {
+				"/Views": "${workspaceFolder}/Views"
+			}
+		}
+	]
+}

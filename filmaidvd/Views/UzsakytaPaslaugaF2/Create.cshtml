@@ -1,0 +1,164 @@
+﻿@model Autonuoma.Models.UzsakytaPaslaugaCE
+
+@* this will also be used as page title in main layout *@
+@{
+	ViewData["title"] = "Uzsakymo sukūrimas (F2)";
+}
+
+@* content header *@
+<div class="main-content-header">
+	<span class="title">@ViewData["title"]</span>
+	<span class="actions">
+		<a href="@Url.Action("Index")"
+		   class="btn btn-outline-primary btn-sm">
+			<i class="fa-solid fa-angles-left"></i> Atgal į sarašą
+		</a>
+	</span>
+</div>
+
+@* content itself *@
+<div class="main-content-ced">
+	@using (Html.BeginForm(FormMethod.Post, new { @class = "entity-ce" }))
+	{
+		@Html.AntiForgeryToken()
+
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+		@* add hidden form fields for non-visible properties, otherwise they will get lost in code that handles button presses *@
+		@Html.HiddenFor(m => m.UzsakytosPaslaugos.InListId)
+
+		<fieldset>
+			<legend class="text-center">Uzsakymas</legend>
+
+			@*<div class="form-group">
+				@Html.LabelFor(m => m.UzsakytosPaslaugos.InListId)
+				@Html.EditorFor(m => m.UzsakytosPaslaugos.InListId, "")
+				@Html.ValidationMessageFor(m => m.UzsakytosPaslaugos.FkPaslauga, "")
+			</div>*@
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.UzsakytosPaslaugos.Data)
+				@Html.TextBoxFor(m => m.UzsakytosPaslaugos.Data, "")
+				@Html.ValidationMessageFor(m => m.UzsakytosPaslaugos.Data, "")
+			</div>
+			<div class="form-group">
+				@Html.LabelFor(m => m.UzsakytosPaslaugos.Kiekis)
+				@Html.EditorFor(m => m.UzsakytosPaslaugos.Kiekis, "") @*Gali buti kad int -> string !daugumai*@
+				@Html.ValidationMessageFor(m => m.UzsakytosPaslaugos.Kiekis, "")
+			</div>
+			<div class="form-group">
+				@Html.LabelFor(m => m.UzsakytosPaslaugos.Kaina)
+				@Html.EditorFor(m => m.UzsakytosPaslaugos.Kaina)
+				@Html.ValidationMessageFor(m => m.UzsakytosPaslaugos.Kaina, "")
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend class="text-center">Paslauga</legend>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.UzsakytosPaslaugos.FkPaslauga)
+				@Html.DropDownListFor(m => m.UzsakytosPaslaugos.FkPaslauga, Model.Lists.Paslaugos, (string)ViewData["none-chosen"])
+				@Html.ValidationMessageFor(m => m.UzsakytosPaslaugos.FkPaslauga, "")
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend class="text-center">Sutartis</legend>
+
+			<div class="form-group">
+				@Html.LabelFor(m => m.UzsakytosPaslaugos.FkSutartis)
+				@Html.DropDownListFor(m => m.UzsakytosPaslaugos.FkSutartis, Model.Lists.Sutartis, (string)ViewData["none-chosen"])
+				@Html.ValidationMessageFor(m => m.UzsakytosPaslaugos.FkSutartis, "")
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<div class="container-fluid d-flex d-row justify-content-between align-items-center">
+				<span></span>
+				<legend style="width: unset; margin-bottom: 0px;">Papildoma sutartis</legend>
+				<button name="add"
+					value="1"
+					formnovalidate @*ASP.NET Core magic attribute to prevent client side validation when submit button is clicked*@
+					formaction="@Url.Action()#listEnd"
+					class="btn btn-info">
+					<i class="fa-solid fa-plus"></i> Pridėti
+				</button>
+			</div>
+
+			<table>
+				<thead>
+					<tr>
+						<th>Laikas</th>
+						<th>Kaina</th>
+						<th>Data</th>
+						<th>Galiojimas</th>
+						<th>Darbuotojas</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@for (var i = 0; i < Model.Sutartis.Count; i++)
+					{
+						<tr>
+							<td class="form-group">
+								@Html.TextBoxFor(m => m.Sutartis[i].Laikas)
+								@Html.ValidationMessageFor(m => m.Sutartis[i].Laikas, "")
+							</td>
+							<td class="form-group">
+								@Html.EditorFor(m => m.Sutartis[i].Kaina)
+								@Html.ValidationMessageFor(m => m.Sutartis[i].Kaina, "")
+							</td>
+							<td class="form-group">
+								@Html.TextBoxFor(m => m.Sutartis[i].SutartiesData)
+								@Html.ValidationMessageFor(m => m.Sutartis[i].SutartiesData, "")
+							</td>
+							<td class="form-group">
+								@Html.TextBoxFor(m => m.Sutartis[i].Galiojimas)
+								@Html.ValidationMessageFor(m => m.Sutartis[i].Galiojimas, "")
+							</td>
+							<td class="form-group">
+								@* add hidden form fields for non-visible properties, otherwise they will get lost in code that handles button presses *@
+								@Html.HiddenFor(m => m.Sutartis[i].InListId)
+
+								@Html.DropDownListFor(
+									m => m.Sutartis[i].FkDarbuotojas, @* fk darbuotojas gal geriau *@
+									Model.Lists.Sutartis,
+									(string)ViewData["none-chosen"]
+								)
+								@Html.ValidationMessageFor(m => m.Sutartis[i].FkDarbuotojas, "")
+							</td>
+							<td>
+								<button name="remove"
+								value="@Model.Sutartis[i].InListId"
+								formnovalidate @*ASP.NET Core magic attribute to prevent client side validation when submit button is clicked*@
+								formaction="@Url.Action()#listEnd"
+								class="btn btn-danger">
+									<i class="fa-solid fa-trash"></i> Šalinti
+								</button>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
+			@* this is used as a marker to automatically scroll down to the end of items list when returning from button presses *@
+			<span id="listEnd"></span>
+		</fieldset>
+
+		<div class="container-fluid d-flex d-row justify-content-end">
+			<button name="save" value="1" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Išsaugoti</button>
+		</div>
+	}
+</div>
+
+@* content footer *@
+<div class="main-content-footer">
+	<span class="title"></span>
+	<span class="actions">
+		<a href="@Url.Action("Index")"
+		   class="btn btn-outline-primary btn-sm">
+			<i class="fa-solid fa-angles-left"></i> Atgal į sarašą
+		</a>
+	</span>
+</div>

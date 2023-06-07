@@ -1,0 +1,57 @@
+﻿@model Autonuoma.Models.Amziaus_apribojimai
+
+@* this will also be used as page title in main layout *@
+@{
+	ViewData["title"] = "Amžiaus apribojimai redagavimas";
+}
+
+@* content header *@
+<div class="main-content-header">
+	<span class="title">@ViewData["title"]</span>
+	<span class="actions">
+		<a 
+			href="@Url.Action("Index")" 
+			class="btn btn-outline-primary btn-sm"
+		>
+			<i class="fa-solid fa-angles-left"></i> Atgal į sarašą
+		</a>
+	</span>
+</div>
+
+@* content itself *@
+<div class="main-content-ced">
+@using( Html.BeginForm(FormMethod.Post, new { @class="entity-ce" }) )
+{
+	@Html.AntiForgeryToken()
+
+	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+	
+	@* add hidden form fields for non-visible properties, otherwise they will get lost in code that handles button presses *@
+	@Html.HiddenFor(m => m.Id)
+	
+	<fieldset>
+		<div class="form-group">
+			@Html.LabelFor(m => m.Pavadinimas)
+			@Html.EditorFor(m => m.Pavadinimas)
+			@Html.ValidationMessageFor(m => m.Pavadinimas, "")
+		</div>
+	</fieldset>
+
+	<div class="container-fluid d-flex d-row justify-content-end">
+		<button name="save" value="1" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Išsaugoti</button>
+	</div>
+}
+</div>
+
+@* content footer *@
+<div class="main-content-footer">
+	<span class="title"></span>
+	<span class="actions">
+		<a 
+			href="@Url.Action("Index")" 
+			class="btn btn-outline-primary btn-sm"
+		>
+			<i class="fa-solid fa-angles-left"></i> Atgal į sarašą
+		</a>
+	</span>
+</div>

@@ -1,0 +1,57 @@
+//report form
+form.rep {
+    //filter section
+    & div.filter {
+        @extend .container-fluid, .d-flex, .justify-content-between, .align-items-center, .p-0, .mb-2;
+
+        //filter fields
+        & div.fields {
+            @extend .flex-grow-1, .d-flex, .justify-content-start, .align-items-center, .m-0, .pe-1;
+
+            //single field
+            & div.field {
+                //add some horizontal space before next field, if any
+                margin-right: 1ch;
+
+                //field label
+                & label {
+                    //add some horizontal space before the field control
+                    margin-right: 1ch;
+                }
+            }
+        }
+
+        //filter buttons
+        & div.buttons {
+            @extend .d-flex;
+
+            //any button
+            & button {
+                //prevent whitespace wrapping in button label
+                white-space: nowrap;
+            }
+        }
+    }
+
+    //report table
+    & table.report {
+        @extend .table, .table-striped, .table-hover, .w-100;
+
+        & thead tr {
+            background-color: #BD9334;
+        }
+
+        & tbody tr.group-header {
+            background-color: #9EA66A;
+        }
+
+        & tbody tr.grand-total-header {
+            background-color: #DEBE5A;
+        }
+
+        & tbody tr.no-data-msg td {
+            color: #B97E49;
+            font-weight: 600; //500 is normal, <500 towards light, >500 towards heavy
+        }
+    }
+}

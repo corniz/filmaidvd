@@ -1,0 +1,17 @@
+//pull in fontawesome stuff
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+
+//pull in bootstrap
+@import "~bootstrap/scss/bootstrap";
+
+//pull in styles from jQuery plugins
+@import "~jquery-datetimepicker/jquery.datetimepicker";
+@import "~datatables.net-dt/css/jquery.dataTables.css";
+
+//pull in custom styles
+@import 'main';
+@import 'forms';
+@import 'reports';

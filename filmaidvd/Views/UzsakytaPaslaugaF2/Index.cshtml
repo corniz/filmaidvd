@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Autonuoma.Models.UzsakytaPaslaugaL>
+
+@* this will also be used as page title in main layout *@
+@{
+	ViewData["title"] = "(F2) Uzsakyta paslauga";
+}
+
+@* content header *@
+<div class="main-content-header">
+	<span class="title">@ViewData["title"]</span>
+	<span class="actions">
+		<a href="@Url.Action("Create")" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Sukurti naują</a>
+	</span>
+</div>
+
+@* content itself *@
+<div class="main-content-lst">
+	<table class="entity-list">
+		<thead>
+			<tr>
+				<th>
+					@Html.DisplayNameFor(model => model.Nr)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Data)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Laikas)
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model) {
+			<tr>
+				<td>
+					@Html.DisplayFor(model => item.Nr)
+				</td>
+				<td>
+					@Html.DisplayFor(model => item.Data)
+				</td>
+					<td>
+						@Html.DisplayFor(model => item.Laikas)
+					</td>
+				<td>
+					<a href="@Url.Action("Edit", new { id = item.Nr })" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i> Redaguoti</a>
+					<a href="@Url.Action("Delete", new { id = item.Nr })" class="btn btn-danger"><i class="fa-solid fa-trash"></i> Šalinti</a>
+				</td>
+			</tr>
+			}
+		</tbody>
+	</table>
+</div>
